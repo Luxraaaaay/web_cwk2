@@ -15,7 +15,7 @@ def print_postings(word: str, index: Dict[str, Dict[str, int]]):
         print(f"{url} : {count}")
 
 
-def find(query: str, index: Dict[str, Dict[str, int]], top_n: int = 10) -> List[Tuple[int, str]]:
+def find(query: str, index: Dict[str, Dict[str, int]]) -> List[Tuple[int, str]]:
     words = [w.lower() for w in WORD_RE.findall(query)]
     if not words:
         return []
@@ -28,4 +28,4 @@ def find(query: str, index: Dict[str, Dict[str, int]], top_n: int = 10) -> List[
         score = sum(index[w][url] for w in words)
         results.append((score, url))
     results.sort(reverse=True)
-    return results[:top_n]
+    return results
