@@ -24,3 +24,15 @@ def test_save_and_load_index_roundtrip(tmp_path):
 
     assert loaded == index
 
+
+def test_mixed_case_and_punctuation_tokenization():
+    pages = {
+        "http://a/": "<html><body>Hello, HeLLo! WORLD?</body></html>",
+    }
+    index = build_index(pages)
+
+    # tokens should be lowercased and punctuation removed
+    assert "hello" in index and "world" in index
+    assert index["hello"]["http://a/"] == 2
+    assert index["world"]["http://a/"] == 1
+

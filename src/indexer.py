@@ -20,7 +20,6 @@ def build_index(pages: dict):
         text = BeautifulSoup(html, "html.parser").get_text(" ")
         for w in tokenize(text):
             index[w][url] += 1
-    # 转为普通 dict
     return {w: dict(d) for w, d in index.items()}
 
 

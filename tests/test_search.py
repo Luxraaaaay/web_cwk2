@@ -24,6 +24,18 @@ def test_find_sorts_by_score_descending():
     assert res == [(5, "u1"), (4, "u2")]
 
 
+def test_find_no_results_returns_empty():
+    index = {"hello": {"u1": 1}}
+    assert find("nonexistentword", index) == []
+
+
+def test_duplicate_word_query_counts_multiple_times():
+    index = {"good": {"u1": 2}, "friends": {"u1": 3}}
+    # query contains 'good' twice -> score should add good twice
+    res = find("good good friends", index)
+    assert res == [(7, "u1")]  # 2 + 2 + 3 = 7
+
+
 def test_find_empty_query_returns_empty_list():
     assert find("   ", {"hello": {"u1": 1}}) == []
 

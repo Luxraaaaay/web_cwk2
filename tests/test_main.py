@@ -35,3 +35,30 @@ def test_interactive_cli_runs_multiple_commands(monkeypatch, capsys):
         ("load", None),
         ("find", "good friends", loaded_index),
     ]
+
+
+def test_cli_error_inputs_show_usage_and_unknown(monkeypatch, capsys):
+    commands = iter([
+        "build x",
+        "load x",
+        "print",
+        "find",
+        "unknowncmd",
+        "exit",
+    ])
+
+    monkeypatch.setattr(builtins, "input", lambda prompt="": next(commands))
+    # replace real commands so they are not executed
+    monkeypatch.setattr(main, "cmd_build", lambda: None)
+    monkeypatch.setattr(main, "cmd_load", lambda: None)
+    monkeypatch.setattr(main, "cmd_print", lambda word, index: None)
+    monkeypatch.setattr(main, "cmd_find", lambda query, index: None)
+
+    main.main()
+
+    out = capsys.readouterr().out
+    assert "Usage: build" in out
+    assert "Usage: load" in out
+    assert "Usage: print <word>" in out
+    assert "Usage: find <query>" in out
+    assert "Unknown command" in out
